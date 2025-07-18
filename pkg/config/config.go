@@ -65,8 +65,8 @@ func getConfigPath() (string, error) {
 	// On Unix systems, it returns $XDG_CONFIG_HOME as specified by https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html if non-empty, else $HOME/.config. On Darwin, it returns $HOME/Library/Application Support. On Windows, it returns %AppData%. On Plan 9, it returns $home/lib.
 	// If the location cannot be determined (for example, $HOME is not defined), then it will return an error.
 	// C:\Users\YourUser\AppData\Roaming
-	c, err := os.Executable()
-	// c, err := os.UserConfigDir()
+	// c, err := os.Executable()
+	c, err := os.UserConfigDir()
 	if err != nil {
 		fmt.Printf("%v: missing config path: %v/StreamNofity/\n", err, c)
 		return "", err
@@ -74,7 +74,7 @@ func getConfigPath() (string, error) {
 	// log.Println("config path:", strings.Replace(c, "StreamNotify.exe", "config.json", 1))
 	c = filepath.ToSlash(strings.Replace(c, "\\StreamNotify.exe", "", 1))
 	// log.Printf("loading config: %s/config.json\n", c)
-	return fmt.Sprintf("%v", c), nil
+	return fmt.Sprintf("%v/StreamNotify", c), nil
 }
 
 func LoadConfig() {

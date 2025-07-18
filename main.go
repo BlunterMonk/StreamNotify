@@ -88,7 +88,8 @@ func main() {
 		}
 	}()
 
-	// log.Println("starting vlc service...")
+	log.Println("starting vlc service...")
+	// TODO: detect disconnects or stuck state, restart vlc and continue
 
 	// Connect to VLC's RC interface
 	conn, err := startAndConnectVlcService()
@@ -104,7 +105,7 @@ func main() {
 			line := scanner.Text()
 
 			// Parse the lines and assign to struct fields
-			// fmt.Println("incoming status response:", line)
+			fmt.Println("===", line)
 			// fmt.Println("===")
 			if strings.Contains(line, "state") {
 				vlcStatus.State = parseState(line)
@@ -210,7 +211,7 @@ F: //loop
 			// var np string
 			priority := strings.Split(config.Config.Priority, ",")
 			// on, id := videoIsPlaying(conn)
-			on := vlcStatus.State > 0
+			on := vlcStatus.State > 0 && vlcStatus.State != 5
 			// id := vlcStatus.CurrentVideo
 			np := vlcStatus.CurrentVideo
 
@@ -222,7 +223,6 @@ F: //loop
 				// reset sleep timer if a new video starts playing after quiet hours were triggered
 				// this probably means a video was played manually when staying up later than normal
 				if sleeping {
-					qt.Reset(0)
 					sleeping = false
 					continue F
 				}
@@ -230,7 +230,7 @@ F: //loop
 
 			// Do not attempt to play anything during quiet hours
 			if quietTime(config.Config.QuietStartTime, config.Config.QuietEndTime) {
-				// continue
+				continue
 			}
 
 			log.Println("attempting to play priority live stream")

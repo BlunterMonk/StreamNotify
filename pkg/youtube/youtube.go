@@ -38,7 +38,7 @@ func GetAllChannelStatus(channels map[string]string) map[string]VideoDetails {
 	for k, v := range channels {
 		res, err := getChannelLiveStatus(v)
 		if err != nil {
-			log.Printf("failed to get live status for channel: %v - %v\n", v, k)
+			log.Printf("failed to get live status for channel: %v - %v\n%s\n", v, k, err.Error())
 			continue
 		}
 
